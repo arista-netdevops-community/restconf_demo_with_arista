@@ -22,18 +22,16 @@ The DELETE method is used to delete the target resource.
 
 # EOS configuration 
 
+The RESTCONF server is in the EOS device.   
 Generates a self-signed certificate
 ```
 DC1-LEAF1A#security pki certificate generate self-signed restconf.crt key restconf.key generate rsa 2048 parameters common-name restconf
 certificate:restconf.crt generated
 DC1-LEAF1A#
 ```
-The RESTCONF server is in the EOS device.  
 
-The default RESTCONF port on Arista devices is TCP 6020. 
-
+The default RESTCONF port on Arista devices is TCP 6020.  
 We need to change the default control-plane ACL on EOS in order to allow TCP 6020.  
-
 ```
 DC1-LEAF1A#show ip access-lists default-control-plane-acl
 ```
