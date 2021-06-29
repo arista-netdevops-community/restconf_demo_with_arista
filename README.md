@@ -174,7 +174,7 @@ round-trip min/avg/max = 3.7/6.3/7.4 ms
 
 ## GET 
 
-USING cURL
+Using cURL
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet1' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
