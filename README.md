@@ -22,6 +22,12 @@ The DELETE method is used to delete the target resource.
 
 # EOS configuration 
 
+Generates a self-signed certificate
+```
+DC1-LEAF1A#security pki certificate generate self-signed restconf.crt key restconf.key generate rsa 2048 parameters common-name restconf
+certificate:restconf.crt generated
+DC1-LEAF1A#
+```
 The RESTCONF server is in the EOS device.  
 
 The default RESTCONF port on Arista devices is TCP 6020. 
@@ -30,44 +36,6 @@ We need to change the default control-plane ACL on EOS in order to allow TCP 602
 
 ```
 DC1-LEAF1A#show ip access-lists default-control-plane-acl
-```
-
-```
-DC1-LEAF1A(config)#show management api restconf
-Enabled:            Yes
-Server:             running on port 6020, in MGMT VRF
-SSL Profile:        restconf
-QoS DSCP:           none
-```
-```
-DC1-LEAF1A(config)#sh run sec restconf
-management api restconf
-   transport https test
-      ssl profile restconf
-      vrf MGMT
-!
-management security
-   ssl profile restconf
-      certificate restconf.crt key restconf.key
-```
-```
-DC1-LEAF1A(config)# show ip interface Management1 brief
-                                                                              Address
-Interface         IP Address           Status       Protocol           MTU    Owner
------------------ -------------------- ------------ -------------- ---------- -------
-Management1       10.73.1.105/24       up           up                1500
-```
-```
-DC1-LEAF1A(config)#show run interface Management1
-interface Management1
-   description oob_management
-   vrf MGMT
-   ip address 10.73.1.105/24
-```
-```
-DC1-LEAF1A(config)#sh run sec control
-system control-plane
-   ip access-group def2 vrf MGMT in
 ```
 ```
 DC1-LEAF1A(config)#show ip access-lists def2
@@ -99,6 +67,44 @@ IP Access List def2
         240 permit rsvp any any
         250 permit tcp any any eq 6040
 ```
+```
+DC1-LEAF1A(config)#sh run sec control
+system control-plane
+   ip access-group def2 vrf MGMT in
+```
+```
+DC1-LEAF1A(config)#sh run sec restconf
+management api restconf
+   transport https test
+      ssl profile restconf
+      vrf MGMT
+!
+management security
+   ssl profile restconf
+      certificate restconf.crt key restconf.key
+```
+```
+DC1-LEAF1A(config)#show management api restconf
+Enabled:            Yes
+Server:             running on port 6020, in MGMT VRF
+SSL Profile:        restconf
+QoS DSCP:           none
+```
+```
+DC1-LEAF1A(config)# show ip interface Management1 brief
+                                                                              Address
+Interface         IP Address           Status       Protocol           MTU    Owner
+----------------- -------------------- ------------ -------------- ---------- -------
+Management1       10.73.1.105/24       up           up                1500
+```
+```
+DC1-LEAF1A(config)#show run interface Management1
+interface Management1
+   description oob_management
+   vrf MGMT
+   ip address 10.73.1.105/24
+```
+
 
 # Verify connectivity to the RESTCONF server
 
