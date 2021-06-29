@@ -219,17 +219,6 @@ b'{"openconfig-interfaces:admin-status":"UP","openconfig-interfaces:counters":{"
 '199997'
 >>> exit()
 ```
-Other examples: 
-```
-api_call = "https://10.73.1.105:6020/restconf/data/netconf-state/capabilities" 
-api_call = "https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet1/config/description"
-api_call = "https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet1/state/counters/in-octets"
-api_call = "https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces"
-api_call = "https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Ethernet1"
-api_call = "https://10.73.1.105:6020/restconf/data/system/state/hostname"
-api_call = "https://10.73.1.105:6020/restconf/data/interfaces/interface=Ethernet1"
-api_call = "https://10.73.1.105:6020/restconf/data/interfaces/interface=Ethernet1/state/description"
-```
 ```
 python3 get.py 
 {'arista-intf-augments:inactive': False,
