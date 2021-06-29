@@ -255,6 +255,35 @@ python3 get.py
 
 ## PUT
 
+Interface configuration 
+
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+{"openconfig-interfaces:description":"blabla","openconfig-interfaces:enabled":false,"arista-intf-augments:load-interval":300,"openconfig-interfaces:loopback-mode":false,"openconfig-interfaces:mtu":0,"openconfig-interfaces:name":"Ethernet4","openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100","openconfig-interfaces:type":"iana-if-type:ethernetCsmacd"}
+```
+```
+curl -X PUT https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config -H 'Content-Type: application/json' -u arista:arista -d @interface.json  --insecure 
+{"openconfig-interfaces:description":"restconf_test","openconfig-interfaces:enabled":true,"openconfig-interfaces:name":"Ethernet4"}
+```
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+{"openconfig-interfaces:description":"restconf_test","openconfig-interfaces:enabled":true,"arista-intf-augments:load-interval":300,"openconfig-interfaces:loopback-mode":false,"openconfig-interfaces:mtu":0,"openconfig-interfaces:name":"Ethernet4","openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100","openconfig-interfaces:type":"iana-if-type:ethernetCsmacd"}
+```
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .
+{
+  "openconfig-interfaces:description": "restconf_test",
+  "openconfig-interfaces:enabled": true,
+  "arista-intf-augments:load-interval": 300,
+  "openconfig-interfaces:loopback-mode": false,
+  "openconfig-interfaces:mtu": 0,
+  "openconfig-interfaces:name": "Ethernet4",
+  "openconfig-vlan:tpid": "openconfig-vlan-types:TPID_0X8100",
+  "openconfig-interfaces:type": "iana-if-type:ethernetCsmacd"
+}
+```
+
+Hostname 
 ```
 curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 {"openconfig-system:hostname":"DC1-LEAF1A"}
@@ -276,6 +305,8 @@ curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accep
 ```
 
 ## POST 
+
+Interface configuration 
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-interfaces:config"'  
@@ -317,6 +348,7 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
 
 ## DELETE 
 
+Using cURL 
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
@@ -329,6 +361,7 @@ curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 ```
 
+Using Python 
 ```
 >>> import requests
 >>> from requests.auth import HTTPBasicAuth
