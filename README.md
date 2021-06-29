@@ -232,7 +232,35 @@ api_call = "https://10.73.1.105:6020/restconf/data/system/state/hostname"
 api_call = "https://10.73.1.105:6020/restconf/data/interfaces/interface=Ethernet1"
 api_call = "https://10.73.1.105:6020/restconf/data/interfaces/interface=Ethernet1/state/description"
 ```
-
+```
+python3 get.py 
+{'arista-intf-augments:inactive': False,
+ 'openconfig-interfaces:admin-status': 'UP',
+ 'openconfig-interfaces:counters': {'in-broadcast-pkts': '0',
+                                    'in-discards': '0',
+                                    'in-errors': '0',
+                                    'in-fcs-errors': '0',
+                                    'in-multicast-pkts': '1762',
+                                    'in-octets': '202553',
+                                    'in-unicast-pkts': '183',
+                                    'out-broadcast-pkts': '1',
+                                    'out-discards': '0',
+                                    'out-errors': '0',
+                                    'out-multicast-pkts': '2552',
+                                    'out-octets': '284793',
+                                    'out-unicast-pkts': '174'},
+ 'openconfig-interfaces:description': 'restconf_test',
+ 'openconfig-interfaces:enabled': True,
+ 'openconfig-interfaces:ifindex': 1,
+ 'openconfig-interfaces:last-change': '1624966430515012864',
+ 'openconfig-interfaces:loopback-mode': False,
+ 'openconfig-interfaces:mtu': 0,
+ 'openconfig-interfaces:name': 'Ethernet1',
+ 'openconfig-interfaces:oper-status': 'UP',
+ 'openconfig-interfaces:type': 'iana-if-type:ethernetCsmacd',
+ 'openconfig-platform-port:hardware-port': 'Port1',
+ 'openconfig-vlan:tpid': 'openconfig-vlan-types:TPID_0X8100'}
+```
 
 ## PUT
 
