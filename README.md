@@ -314,3 +314,39 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
   "type": "iana-if-type:ethernetCsmacd"
 }
 ```
+
+## DELETE 
+
+
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+{"openconfig-interfaces:config":{"description":"test","enabled":true,"arista-intf-augments:load-interval":300,"loopback-mode":true,"name":"Loopback100","openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100","type":"iana-if-type:softwareLoopback"},"openconfig-interfaces:hold-time":{"config":{"down":0,"up":0},"state":{"down":0,"up":0}},"openconfig-interfaces:name":"Loopback100","openconfig-interfaces:state":{"enabled":true,"loopback-mode":false,"openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100"},"openconfig-interfaces:subinterfaces":{"subinterface":[{"config":{"description":"test","enabled":true,"index":0},"index":0,"openconfig-if-ip:ipv4":{"config":{"dhcp-client":false,"enabled":true,"mtu":1500},"state":{"dhcp-client":false,"enabled":true,"mtu":1500}},"openconfig-if-ip:ipv6":{"config":{"dhcp-client":false,"enabled":false,"mtu":1500},"state":{"dhcp-client":false,"enabled":false,"mtu":1500}},"state":{"enabled":true,"index":0}}]}}
+```
+```
+curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100 -u arista:arista  --insecure
+```
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+```
+
+```
+>>> import requests
+>>> from requests.auth import HTTPBasicAuth
+>>> import json
+>>> USER = 'arista'
+>>> PASS = 'arista'
+>>> requests.packages.urllib3.disable_warnings()
+>>> headers = {'Content-Type': 'application/yang-data+json', 'Accept': 'application/yang-data+json'}
+>>> api_call = "https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100" 
+>>> result = requests.get(api_call, auth=HTTPBasicAuth(USER, PASS), headers=headers, verify=False)
+>>> result.status_code
+200
+>>> result.json()
+{'openconfig-interfaces:config': {'description': 'test', 'enabled': True, 'arista-intf-augments:load-interval': 300, 'loopback-mode': True, 'name': 'Loopback100', 'openconfig-vlan:tpid': 'openconfig-vlan-types:TPID_0X8100', 'type': 'iana-if-type:softwareLoopback'}, 'openconfig-interfaces:hold-time': {'config': {'down': 0, 'up': 0}, 'state': {'down': 0, 'up': 0}}, 'openconfig-interfaces:name': 'Loopback100', 'openconfig-interfaces:state': {'enabled': True, 'loopback-mode': False, 'openconfig-vlan:tpid': 'openconfig-vlan-types:TPID_0X8100'}, 'openconfig-interfaces:subinterfaces': {'subinterface': [{'config': {'description': 'test', 'enabled': True, 'index': 0}, 'index': 0, 'openconfig-if-ip:ipv4': {'config': {'dhcp-client': False, 'enabled': True, 'mtu': 1500}, 'state': {'dhcp-client': False, 'enabled': True, 'mtu': 1500}}, 'openconfig-if-ip:ipv6': {'config': {'dhcp-client': False, 'enabled': False, 'mtu': 1500}, 'state': {'dhcp-client': False, 'enabled': False, 'mtu': 1500}}, 'state': {'enabled': True, 'index': 0}}]}}
+>>> result = requests.delete(api_call, auth=HTTPBasicAuth(USER, PASS), headers=headers, verify=False)
+>>> result.status_code
+200
+>>> result.ok
+True
+>>> 
+```
