@@ -256,9 +256,25 @@ python3 get.py
 ## PUT
 
 ```
+curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+{"openconfig-system:hostname":"DC1-LEAF1A"}
+```
+```
+curl -X GET https://10.73.1.105:6020/restconf/data/system --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-system:config".hostname'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 74748    0 74748    0     0   300k      0 --:--:-- --:--:-- --:--:--  300k
+"DC1-LEAF1A"
+```
+```
 curl -X PUT https://10.73.1.105:6020/restconf/data/system/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-system:hostname":"test"}'  --insecure
 {"openconfig-system:hostname":"test"}
 ```
+```
+curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
+{"openconfig-system:hostname":"test"}
+```
+
 ## POST 
 
 ```
