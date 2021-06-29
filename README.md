@@ -349,4 +349,6 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/i
 >>> result.ok
 True
 >>> 
+>>> result = requests.get(api_call, auth=HTTPBasicAuth(USER, PASS), headers=headers, verify=False)
+>>> result.json()
 ```
