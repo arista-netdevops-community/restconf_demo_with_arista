@@ -252,5 +252,7 @@ python3 get.py
 ## PUT
 
 ```
-curl -X PUT https://10.73.1.105:6020/restconf/data/system/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-system:hostname":"test"}'  --insecure
+ curl -X PUT https://10.73.1.105:6020/restconf/data/system/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-system:hostname":"test"}'  --insecure
+{"openconfig-system:hostname":"test"}
 ```
+
