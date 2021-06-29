@@ -259,4 +259,25 @@ python3 get.py
  curl -X PUT https://10.73.1.105:6020/restconf/data/system/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-system:hostname":"test"}'  --insecure
 {"openconfig-system:hostname":"test"}
 ```
+## POST 
 
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-interfaces:config"'{
+  "description": "",
+  "enabled": true,
+  "arista-intf-augments:load-interval": 300,
+  "loopback-mode": false,
+  "mtu": 0,
+  "name": "Ethernet4",
+  "openconfig-vlan:tpid": "openconfig-vlan-types:TPID_0X8100",
+  "type": "iana-if-type:ethernetCsmacd"
+}
+```
+```
+curl -X POST https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-interfaces:description":"restconf_test"}'  --insecure 
+{"openconfig-interfaces:description":"restconf_test"}
+```
+```
+curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-interfaces:config".description'
+"restconf_test"
+```
