@@ -8,17 +8,10 @@ RESTCONF examples with EOS
 
 RESTCONF is defined in the [RFC 8040](https://datatracker.ietf.org/doc/html/rfc8040)
 
-The GET method is sent by the client to retrieve data for a resource. 
-
-The POST method is sent by the client to create a data resource. 
-
-The PUT method is sent by the client to create or replace the target data resource. 
-
-Both the POST and PUT methods can be used to create data resources. The difference is: 
-- The target resource for the POST method for resource creation is the parent of the new resource.  
-- The target resource for the PUT method for resource creation is the new resource.
-
-The DELETE method is used to delete the target resource. 
+The GET method is sent by the client to retrieve data for a resource.   
+The POST method is sent by the client to create a data resource.  
+The PUT method is sent by the client to create or replace the target data resource.   
+The DELETE method is used to delete the target resource.  
 
 # EOS configuration 
 
@@ -70,6 +63,7 @@ DC1-LEAF1A(config)#sh run sec control
 system control-plane
    ip access-group def2 vrf MGMT in
 ```
+Let's configure RESTCONF 
 ```
 DC1-LEAF1A(config)#sh run sec restconf
 management api restconf
@@ -81,6 +75,7 @@ management security
    ssl profile restconf
       certificate restconf.crt key restconf.key
 ```
+Let's verify 
 ```
 DC1-LEAF1A(config)#show management api restconf
 Enabled:            Yes
@@ -124,6 +119,7 @@ sudo apt-get -y upgrade
 sudo apt-get install nmap hping3 jq curl -y
 pip3 install requests 
 ```
+Let's ping the device 
 ```
 ping 10.73.1.105
 PING 10.73.1.105 (10.73.1.105) 56(84) bytes of data.
@@ -134,6 +130,7 @@ PING 10.73.1.105 (10.73.1.105) 56(84) bytes of data.
 2 packets transmitted, 2 received, 0% packet loss, time 1017ms
 rtt min/avg/max/mdev = 0.486/0.522/0.559/0.043 ms
 ```
+Let's scan the open ports 
 ```
 nmap -p 6015-6025  10.73.1.105
 
@@ -156,6 +153,7 @@ PORT     STATE    SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 1.28 seconds
 ```
+Let's verify if the device accepts TCP SYN on the port 6020 
 ```
 sudo hping3 10.73.1.105 -p 6020 -S
 HPING 10.73.1.105 (ens4 10.73.1.105): S set, 40 headers + 0 data bytes
@@ -174,7 +172,7 @@ round-trip min/avg/max = 3.7/6.3/7.4 ms
 
 ## GET 
 
-Using cURL
+### Using cURL
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet1' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
@@ -190,8 +188,7 @@ curl -X GET https://10.73.1.105:6020/restconf/data/system --header 'Accept: appl
 curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 curl -X GET https://10.73.1.105:6020/restconf/data/system --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-system:config".hostname'
 ```
-
-Using Python 
+### Using Python 
 ```
 ksator@automation_1:~$ python3
 Python 3.6.9 (default, Jan 26 2021, 15:33:00) 
@@ -255,16 +252,19 @@ python3 get.py
 
 ## PUT
 
-Interface configuration 
+### Interface configuration example 
 
+Let's check before the change 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 {"openconfig-interfaces:description":"blabla","openconfig-interfaces:enabled":false,"arista-intf-augments:load-interval":300,"openconfig-interfaces:loopback-mode":false,"openconfig-interfaces:mtu":0,"openconfig-interfaces:name":"Ethernet4","openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100","openconfig-interfaces:type":"iana-if-type:ethernetCsmacd"}
 ```
+Let's use [this file](interface.json)  
 ```
 curl -X PUT https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config -H 'Content-Type: application/json' -u arista:arista -d @interface.json  --insecure 
 {"openconfig-interfaces:description":"restconf_test","openconfig-interfaces:enabled":true,"openconfig-interfaces:name":"Ethernet4"}
 ```
+Let's verify after the change
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 {"openconfig-interfaces:description":"restconf_test","openconfig-interfaces:enabled":true,"arista-intf-augments:load-interval":300,"openconfig-interfaces:loopback-mode":false,"openconfig-interfaces:mtu":0,"openconfig-interfaces:name":"Ethernet4","openconfig-vlan:tpid":"openconfig-vlan-types:TPID_0X8100","openconfig-interfaces:type":"iana-if-type:ethernetCsmacd"}
@@ -283,7 +283,9 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
 }
 ```
 
-Hostname 
+### Device hostname example 
+
+Let's check before the change 
 ```
 curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 {"openconfig-system:hostname":"DC1-LEAF1A"}
@@ -299,6 +301,7 @@ curl -X GET https://10.73.1.105:6020/restconf/data/system --header 'Accept: appl
 curl -X PUT https://10.73.1.105:6020/restconf/data/system/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-system:hostname":"test"}'  --insecure
 {"openconfig-system:hostname":"test"}
 ```
+Let's verify after the change
 ```
 curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 {"openconfig-system:hostname":"test"}
@@ -306,8 +309,9 @@ curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accep
 
 ## POST 
 
-Interface configuration 
+### Interface configuration example 
 
+Let's check before the change 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-interfaces:config"'  
 {
@@ -328,6 +332,7 @@ curl -X POST https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
 ```
 curl -X POST https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4/config -H 'Content-Type: application/json' -u arista:arista -d '{"openconfig-interfaces:enabled":false}'  --insecure {"openconfig-interfaces:enabled":false}
 ```
+Let's verify after the change
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interfaces/interface=Ethernet4' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure | jq .'"openconfig-interfaces:config".description'
 "restconf_test"
@@ -348,7 +353,9 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
 
 ## DELETE 
 
-Using cURL 
+### Using cURL 
+
+Let's check before the change 
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
@@ -357,11 +364,13 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/i
 ```
 curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100 -u arista:arista  --insecure
 ```
+Let's verify after the change (there is currently a bug as the interface lo100 is not deleted) 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 ```
 
-Using Python 
+### Using Python 
+
 ```
 >>> import requests
 >>> from requests.auth import HTTPBasicAuth
