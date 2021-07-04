@@ -136,7 +136,7 @@ Python 3.6.9
 ```
 sudo apt-get update
 sudo apt-get -y upgrade
-sudo apt-get install nmap hping3 jq curl -y
+sudo apt-get install nmap hping3 jq curl netcat -y
 pip3 install requests
 ```
 Let's ping the device
@@ -187,7 +187,11 @@ len=46 ip=10.73.1.105 ttl=64 DF id=0 sport=6020 flags=SA seq=4 win=29200 rtt=6.6
 5 packets transmitted, 5 packets received, 0% packet loss
 round-trip min/avg/max = 3.7/6.3/7.4 ms
 ```
-
+Let's try to open a TCP connection on the port 6020
+```
+nc -v -z 10.73.1.105 6020
+Connection to 10.73.1.105 6020 port [tcp/*] succeeded!
+```
 # RESTCONF examples
 
 ## GET
@@ -427,7 +431,7 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/i
 curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100 -u arista:arista  --insecure
 ```
 Let's verify after the change
-There is currently a bug (599524) as the interface lo100 is not deleted. The bug is already fixed but not included in this EOS release  
+There is currently a bug (599524) as the interface lo100 is not deleted. The bug is already fixed but not included in this EOS release
 
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
