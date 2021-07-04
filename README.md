@@ -1,4 +1,24 @@
-
+- [About this repository](#about-this-repository)
+- [About RESTCONF](#about-restconf)
+- [EOS configuration](#eos-configuration)
+- [Verify connectivity to the RESTCONF server](#verify-connectivity-to-the-restconf-server)
+- [RESTCONF examples](#restconf-examples)
+  - [GET](#get)
+    - [Using cURL](#using-curl)
+    - [Using Python](#using-python)
+  - [HEAD](#head)
+    - [Using cURL](#using-curl-1)
+    - [Using Python](#using-python-1)
+  - [PUT](#put)
+    - [Using cURL](#using-curl-2)
+      - [Interface configuration example](#interface-configuration-example)
+      - [Device hostname example](#device-hostname-example)
+  - [POST](#post)
+    - [Using cURL](#using-curl-3)
+      - [Interface configuration example](#interface-configuration-example-1)
+  - [DELETE](#delete)
+    - [Using cURL](#using-curl-4)
+    - [Using Python](#using-python-2)
 
 # About this repository
 
@@ -171,7 +191,6 @@ round-trip min/avg/max = 3.7/6.3/7.4 ms
 # RESTCONF examples
 
 ## GET
-
 ### Using cURL
 
 ```
@@ -249,7 +268,6 @@ python3 get.py
  'openconfig-platform-port:hardware-port': 'Port1',
  'openconfig-vlan:tpid': 'openconfig-vlan-types:TPID_0X8100'}
 ```
-
 ## HEAD
 ### Using cURL
 
@@ -259,7 +277,6 @@ HTTP/1.1 200 OK
 Content-Type: application/yang.data+json
 Date: Sun, 04 Jul 2021 14:20:39 GMT
 ```
-
 ### Using Python
 
 ```
@@ -296,7 +313,8 @@ b''
 ```
 ## PUT
 
-### Interface configuration example
+### Using cURL
+#### Interface configuration example
 
 Let's check before the change
 ```
@@ -327,7 +345,7 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/openconfig-interfaces:interf
 }
 ```
 
-### Device hostname example
+#### Device hostname example
 
 Let's check before the change
 ```
@@ -352,8 +370,8 @@ curl -X GET https://10.73.1.105:6020/restconf/data/system/config --header 'Accep
 ```
 
 ## POST
-
-### Interface configuration example
+### Using cURL
+#### Interface configuration example
 
 Let's check before the change
 ```
@@ -408,7 +426,9 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/i
 ```
 curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100 -u arista:arista  --insecure
 ```
-Let's verify after the change (there is currently a bug as the interface lo100 is not deleted)
+Let's verify after the change
+There is currently a bug (599524) as the interface lo100 is not deleted. The bug is already fixed but not included in this EOS release  
+
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 ```
