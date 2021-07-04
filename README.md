@@ -132,6 +132,8 @@ interface Management1
 
 # Verify connectivity to the RESTCONF server
 
+From the RESTCONF client:
+
 ```
 lsb_release -a
 No LSB modules are available.
