@@ -1,7 +1,15 @@
 - [About this repository](#about-this-repository)
 - [About RESTCONF](#about-restconf)
 - [EOS configuration](#eos-configuration)
+  - [Generates a self-signed certificate](#generates-a-self-signed-certificate)
+  - [Change the default control-plane ACL](#change-the-default-control-plane-acl)
+  - [Configure RESTCONF](#configure-restconf)
+  - [Verify](#verify)
 - [Verify connectivity to the RESTCONF server](#verify-connectivity-to-the-restconf-server)
+  - [Ping the device](#ping-the-device)
+  - [Scan the open ports](#scan-the-open-ports)
+  - [Verify if the device accepts TCP SYN on the port 6020](#verify-if-the-device-accepts-tcp-syn-on-the-port-6020)
+  - [Try to open a TCP connection on the port 6020](#try-to-open-a-tcp-connection-on-the-port-6020)
 - [RESTCONF examples](#restconf-examples)
   - [GET](#get)
     - [Using cURL](#using-curl)
@@ -36,12 +44,14 @@ The DELETE method is used to delete the target resource.
 # EOS configuration
 
 The RESTCONF server is in the EOS device.
-Generates a self-signed certificate
+## Generates a self-signed certificate
+
 ```
 DC1-LEAF1A#security pki certificate generate self-signed restconf.crt key restconf.key generate rsa 2048 parameters common-name restconf
 certificate:restconf.crt generated
 DC1-LEAF1A#
 ```
+## Change the default control-plane ACL
 
 The default RESTCONF port on Arista devices is TCP 6020.
 We need to change the default control-plane ACL on EOS in order to allow TCP 6020.
@@ -83,7 +93,7 @@ DC1-LEAF1A(config)#sh run sec control
 system control-plane
    ip access-group def2 vrf MGMT in
 ```
-Let's configure RESTCONF
+## Configure RESTCONF
 ```
 DC1-LEAF1A(config)#sh run sec restconf
 management api restconf
@@ -95,7 +105,7 @@ management security
    ssl profile restconf
       certificate restconf.crt key restconf.key
 ```
-Let's verify
+## Verify
 ```
 DC1-LEAF1A(config)#show management api restconf
 Enabled:            Yes
@@ -139,7 +149,7 @@ sudo apt-get -y upgrade
 sudo apt-get install nmap hping3 jq curl netcat -y
 pip3 install requests
 ```
-Let's ping the device
+## Ping the device
 ```
 ping 10.73.1.105
 PING 10.73.1.105 (10.73.1.105) 56(84) bytes of data.
@@ -150,7 +160,7 @@ PING 10.73.1.105 (10.73.1.105) 56(84) bytes of data.
 2 packets transmitted, 2 received, 0% packet loss, time 1017ms
 rtt min/avg/max/mdev = 0.486/0.522/0.559/0.043 ms
 ```
-Let's scan the open ports
+## Scan the open ports
 ```
 nmap -p 6015-6025  10.73.1.105
 
@@ -173,7 +183,8 @@ PORT     STATE    SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 1.28 seconds
 ```
-Let's verify if the device accepts TCP SYN on the port 6020
+## Verify if the device accepts TCP SYN on the port 6020
+
 ```
 sudo hping3 10.73.1.105 -p 6020 -S
 HPING 10.73.1.105 (ens4 10.73.1.105): S set, 40 headers + 0 data bytes
@@ -187,7 +198,7 @@ len=46 ip=10.73.1.105 ttl=64 DF id=0 sport=6020 flags=SA seq=4 win=29200 rtt=6.6
 5 packets transmitted, 5 packets received, 0% packet loss
 round-trip min/avg/max = 3.7/6.3/7.4 ms
 ```
-Let's try to open a TCP connection on the port 6020
+## Try to open a TCP connection on the port 6020
 ```
 nc -v -z 10.73.1.105 6020
 Connection to 10.73.1.105 6020 port [tcp/*] succeeded!
