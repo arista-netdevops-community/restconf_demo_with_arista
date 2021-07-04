@@ -447,7 +447,7 @@ curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces
 Let's verify after the change.
 The interface lo100 is not deleted.
 This is due to the bug 599524.
-his bug is already fixed but it is not included in this EOS release.
+This bug is already fixed but it is not included in this EOS release.
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 ```
