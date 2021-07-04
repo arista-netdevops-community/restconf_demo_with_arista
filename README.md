@@ -36,10 +36,11 @@ RESTCONF examples with EOS
 
 RESTCONF is defined in the [RFC 8040](https://datatracker.ietf.org/doc/html/rfc8040)
 
-The GET method is sent by the client to retrieve data for a resource.
-The POST method is sent by the client to create a data resource.
-The PUT method is sent by the client to create or replace the target data resource.
-The DELETE method is used to delete the target resource.
+- The GET method is sent by the client to retrieve data for a resource.
+- The HEAD method is sent by the client to retrieve just the header fields (which contain the metadata for a resource) that would be returned for the comparable GET method, without the response message-body. It is supported for all resources that support the GET method.
+- The POST method is sent by the client to create a data resource.
+- The PUT method is sent by the client to create or replace the target data resource.
+- The DELETE method is used to delete the target resource.
 
 # EOS configuration
 
@@ -441,9 +442,10 @@ curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/i
 ```
 curl -X DELETE https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100 -u arista:arista  --insecure
 ```
-Let's verify after the change
-There is currently a bug (599524) as the interface lo100 is not deleted. The bug is already fixed but not included in this EOS release
-
+Let's verify after the change.
+The interface lo100 is not deleted.
+This is due to the bug 599524.
+his bug is already fixed but it is not included in this EOS release.
 ```
 curl -s GET 'https://10.73.1.105:6020/restconf/data/ietf-interfaces:interfaces/interface=Loopback100' --header 'Accept: application/yang-data+json' -u arista:arista  --insecure
 ```
